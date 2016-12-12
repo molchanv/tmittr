@@ -1,22 +1,22 @@
 # в функцию передается словарь данных из формы, в котором имеются пары ключ:значение вида {"mon":1}
 # функция извлекает все значения из таких пар, соединяет воедино и привязывает к ключу weekdays
-def weekdays_nums(dict):
+def weekdays_nums(form_input):
     week = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
     nums = []
-    dict = dict.copy()
+    form_input = form_input.copy()
 
     for weekday in week:
-        if weekday in dict:
+        if weekday in form_input:
             # в список nums записывается порядковыый номер дня недели
-            nums.append(str(dict[weekday]))
+            nums.append(str(form_input[weekday]))
             # из словаря удаляется день недели
-            dict.pop(weekday)
+            form_input.pop(weekday)
 
     # элементы списка nums собираются воедино
     weekdays = ''.join(nums)
     # в словаре остается одна пара ключ:значение, в которую записывается число вида "134", где
     # каждая цифра - порядковый номер дня недели
-    dict['weekdays'] = int(weekdays)
+    form_input['weekdays'] = int(weekdays)
     return dict
 
 
@@ -31,8 +31,8 @@ def inverse_weekdays_nums(nums):
         '6': 'Сб',
         '7': 'Вс',
     }
-    list = []
+    result = []
     for i in str(nums):
         if i in week:
-            list.append(week[i])
-    return list
+            result.append(week[i])
+    return result
