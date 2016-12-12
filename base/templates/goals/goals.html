@@ -1,0 +1,337 @@
+{% extends 'profile/../profile_base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ user.username }}
+{% endblock %}
+
+{% block sidebar %}
+    <div class="profile">
+        <h3 class="caps header">{{ request.user.username }}</h3>
+    </div>
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="{% url 'new-goal' username=request.user.username  %}"><i class="fa fa-flag" aria-hidden="true"></i> Поставить цель</a></li>
+        <li {% if not guest %}class="active"{% endif %}><a href="{% url 'goals' username=request.user.username filter='all' %}"><i class="fa fa-bullseye" aria-hidden="true"></i> Мои цели</a></li>
+        <br>
+        <li><a href="{% url 'feed' username=request.user.username %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Лента</a></li>
+        <li><a href="{% url 'subscription' username=request.user.username %}"><i class="fa fa-users" aria-hidden="true"></i> Подписки</a></li>
+        <br>
+        <li><a href="{% url 'settings' username=request.user.username %}"><i class="fa fa-cog" aria-hidden="true"></i> Настройки</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="user-profile clearfix block">
+        <div class="row nomargin">
+            <div class="col-xs-3 col-md-2 avatar nopadding">
+                {% if owner.avatar == 'none' %}
+                    <img src="{% static 'images/profile_img.jpg' %}" class="img-responsive"{% if not guest %} data-toggle="modal" data-target="#avatar-modal" {% endif %}>
+                {% else %}
+                    <img src="{{ owner.avatar.url }}" class="img-responsive"{% if not guest %} data-toggle="modal" data-target="#avatar-modal" {% endif %}>
+                {% endif %}
+            </div>
+            <div class="col-xs-9 col-md-5">
+                <ul class="nopadding nomargin">
+                    <li>
+                        <h1 class="profile-username caps">{{ owner.user.username }}</h1>
+                        {% if not guest %}
+                            <a href="{% url 'settings' username=request.user.username %}" class="btn grey-button-xs btn-edit">Редактировать</a>
+                        {% else %}
+                            {% if subscriber %}
+                                <button name="{{ user.username }}" id="follow" class="btn grey-button-xs-reverse btn-edit">Отписаться</button>
+                            {% else %}
+                                <button name="{{ user.username }}" id="follow" class="btn grey-button-xs btn-edit">Подписаться</button>
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                    <li>
+                        <h2 class="header">{{ user.get_full_name }}</h2>
+                    </li>
+                    <li>
+                        <a href="{{ owner.web_site }}" class="info" target="_blank">{{ owner.web_site }}</a>
+                    </li>
+                    <li>
+                        <span class="user-about">{{ owner.more_info }}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="hidden-xs hidden-sm col-md-5 stat">
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.0 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполняется</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.1 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполнено</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.2 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Невыполнено</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row visible-xs visible-sm nomargin">
+            <div class="stat">
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.0 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполняется</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.1 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполнено</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.2 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Невыполнено</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="goals">
+        <div class="hidden-md hidden-lg horizontal-block">
+            <a class="btn btn-primary btn-block" role="button" data-toggle="collapse" href="#filtercollapse" aria-expanded="false" aria-controls="filtercollapse">
+              Фильтр
+            </a>
+            <div class="collapse" id="filtercollapse">
+                <div class="well">
+                    <ul class="nav nav-pills nav-stacked">
+                        {% if filter == 'all' %}
+                            <li class="bs-callout"><a href="{% url 'goals' filter='all' username=user.username %}">Все</a></li>
+                            <li><a href="{% url 'goals' filter='in-process' username=user.username %}">Выполняются</a></li>
+                            <li><a href="{% url 'goals' filter='success' username=user.username %}">Выполненные</a></li>
+                            <li><a href="{% url 'goals' filter='failed' username=user.username %}">Невыполненные</a></li>
+                        {% elif filter == 'in-process' %}
+                            <li><a href="{% url 'goals' filter='all' username=user.username %}">Все</a></li>
+                            <li class="bs-callout"><a href="{% url 'goals' filter='in-process' username=user.username %}">Выполняются</a></li>
+                            <li><a href="{% url 'goals' filter='success' username=user.username %}">Выполненные</a></li>
+                            <li><a href="{% url 'goals' filter='failed' username=user.username %}">Невыполненные</a></li>
+                        {% elif filter == 'success' %}
+                            <li><a href="{% url 'goals' filter='all' username=user.username %}">Все</a></li>
+                            <li><a href="{% url 'goals' filter='in-process' username=user.username %}">Выполняются</a></li>
+                            <li class="bs-callout"><a href="{% url 'goals' filter='success' username=user.username %}">Выполненные</a></li>
+                            <li><a href="{% url 'goals' filter='failed' username=user.username %}">Невыполненные</a></li>
+                        {% else %}
+                            <li><a href="{% url 'goals' filter='all' username=user.username %}">Все</a></li>
+                            <li><a href="{% url 'goals' filter='in-process' username=user.username %}">Выполняются</a></li>
+                            <li><a href="{% url 'goals' filter='success' username=user.username %}">Выполненные</a></li>
+                            <li class="bs-callout"><a href="{% url 'goals' filter='failed' username=user.username %}">Невыполненные</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-9 main-col">
+        {% if goals %}
+            <div class="block">
+                <h3 class="header">Список целей</h3>
+            </div>
+            {% for goal in goals %}
+                <div class="block goal clearfix" onclick="location.href='{% url 'goal-about' goal_id=goal.id username=owner.user.username %}'">
+                    <div class="col-md-2 goal-status">
+                        {% if goal.status == 'in-process' %}
+                            <span class="label label-warning">Выполняется</span>
+                        {% elif goal.status == 'success' %}
+                            <span class="label label-success">Выполнено</span>
+                        {% else %}
+                            <span class="label label-danger">Невыполнено</span>
+                        {% endif %}
+                        <span class="info">{{ user.get_full_name }}</span>
+                        <span class="info-green">{{ goal.created.date }}</span>
+                    </div>
+                    <div class="col-md-10 goal-info">
+                        <h4>{{ goal.title }}</h4>
+                        {% if goal.confirmation %}
+                            {% if goal.status == 'success' %}
+                                {% if goal.success_comment %}
+                                    <p class="info">{{ goal.success_comment }}</p>
+                                {% endif %}
+                            {% else %}
+                                {% if goal.fail_comment %}
+                                    <p class="info">Цена слова: {{ goal.price_words }}</p>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <div class="goal-time">
+                                {% if now < goal.end %}
+                                    <p>{{ goal.description }}</p>
+                                    <span class="info">{{ now|timesince:goal.end }} до окончания</span>
+                                {% else %}
+                                    <div class="error"><i class="fa fa-exclamation-circle"></i> Время вышло. Подтвердите окончание цели</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if goals.has_previous %}
+                        <a href="?page={{ goals.previous_page_number }}">назад</a>
+                    {% endif %}
+                    <span class="current">
+                        Страница {{ goals.number }} из {{ goals.paginator.num_pages }}
+                    </span>
+                    {% if goals.has_next %}
+                        <a href="?page={{ goals.next_page_number }}">вперед</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% else %}
+            {% if filter == 'all' %}
+                <div class="block">
+                    <div class="green-background">
+                    {% if guest %}
+                        <i class="fa fa-exclamation-circle"></i> Пользователь еще не поставил ни одной цели.
+                    {% else %}
+                        <i class="fa fa-exclamation-circle"></i> Вы еще не поставили ни одной цели.
+                        <a href="{% url 'new-goal' username=request.user.username  %}">Поставить новую цель</a>
+                    {% endif %}
+                    </div>
+                </div>
+            {% elif filter == 'in-process' %}
+                <div class="block">
+                    <div class="green-background">
+                    {% if guest %}
+                        <i class="fa fa-exclamation-circle"></i> У пользователя нет активных целей.
+                    {% else %}
+                        <i class="fa fa-exclamation-circle"></i> Сейчас у вас нет активных целей.
+                        <a href="{% url 'new-goal' username=request.user.username  %}">Поставить новую цель</a>
+                    {% endif %}
+                    </div>
+                </div>
+            {% elif filter == 'success' %}
+                <div class="block">
+                    <div class="green-background">
+                    {% if guest %}
+                        <i class="fa fa-exclamation-circle"></i> Пользователь еще не выполнил ни одной цели.
+                    {% else %}
+                        <i class="fa fa-exclamation-circle"></i> Вы еще не выполнили ни одной цели.
+                    {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="block">
+                    <div class="green-background">
+                    {% if guest %}
+                        <i class="fa fa-exclamation-circle"></i> У пользователя нет выполненных целей.
+                    {% else %}
+                        <i class="fa fa-exclamation-circle"></i> Отлично! У вас нет невыполненных целей.
+                    {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+        </div>
+        <div class="visible-md visible-lg col-md-3 right-col">
+            <div class="filter block">
+                <ul class="nav nav-pills nav-stacked">
+                    {% if filter == 'all' %}
+                        <li class="bs-callout"><a href="{% url 'goals' filter='all' username=user.username %}">Все</a></li>
+                        <li><a href="{% url 'goals' filter='in-process' username=user.username %}">Выполняются</a></li>
+                        <li><a href="{% url 'goals' filter='success' username=user.username %}">Выполненные</a></li>
+                        <li><a href="{% url 'goals' filter='failed' username=user.username %}">Невыполненные</a></li>
+                    {% elif filter == 'in-process' %}
+                        <li><a href="{% url 'goals' filter='all' username=user.username %}">Все</a></li>
+                        <li class="bs-callout"><a href="{% url 'goals' filter='in-process' username=user.username %}">Выполняются</a></li>
+                        <li><a href="{% url 'goals' filter='success' username=user.username %}">Выполненные</a></li>
+                        <li><a href="{% url 'goals' filter='failed' username=user.username %}">Невыполненные</a></li>
+                    {% elif filter == 'success' %}
+                        <li><a href="{% url 'goals' filter='all' username=user.username %}">Все</a></li>
+                        <li><a href="{% url 'goals' filter='in-process' username=user.username %}">Выполняются</a></li>
+                        <li class="bs-callout"><a href="{% url 'goals' filter='success' username=user.username %}">Выполненные</a></li>
+                        <li><a href="{% url 'goals' filter='failed' username=user.username %}">Невыполненные</a></li>
+                    {% else %}
+                        <li><a href="{% url 'goals' filter='all' username=user.username %}">Все</a></li>
+                        <li><a href="{% url 'goals' filter='in-process' username=user.username %}">Выполняются</a></li>
+                        <li><a href="{% url 'goals' filter='success' username=user.username %}">Выполненные</a></li>
+                        <li class="bs-callout"><a href="{% url 'goals' filter='failed' username=user.username %}">Невыполненные</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    {% if not guest %}
+        <div id="avatar-modal" class="modal fade bs-modal-sm" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <ul class="avatar-edit">
+                  <li>
+                      <a href="{% url 'avatar_delete' username=user.username %}" class="btn btn-block btn-default btn-block">Удалить фото</a>
+                  </li>
+                  <li>
+                      <form action="{% url 'avatar_edit' username=user.username %}" id="avatar" method="post" enctype="multipart/form-data">
+                          {% csrf_token %}
+                         <div class="file-upload">
+                             <label>
+                                  <input type="file" name="avatar" accept="image/x-png, image/gif, image/jpeg" onchange="document.getElementById('avatar').submit()">
+                                  <span>Изменить фото</span>
+                             </label>
+                        </div>
+                      </form>
+                  </li>
+                  <li>
+                      <div class="btn btn-default btn-block" data-dismiss="modal">Отмена</div>
+                  </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js"></script>
+<script>
+window.sr = ScrollReveal();
+sr.reveal('.goal');
+
+$('#follow').click(function(){
+      $.ajax({
+            type: "POST",
+            url: "{% url 'follow' %}",
+            data: {'username': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: "json"
+          });
+    });
+$(document).ajaxStop(function(){
+    window.location.reload();
+});
+</script>
+{% endblock %}

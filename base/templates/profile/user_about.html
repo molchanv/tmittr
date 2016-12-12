@@ -1,0 +1,89 @@
+{% extends 'profile/../profile_base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Завершение регистрации
+{% endblock %}
+
+{% block sidebar %}
+    <div class="profile">
+        <h3 class="caps header">Новый пользователь</h3>
+    </div>
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href=""><i class="fa fa-flag" aria-hidden="true"></i> Поставить цель</a></li>
+        <li><a href=""><i class="fa fa-bullseye" aria-hidden="true"></i> Мои цели</a></li>
+        <br>
+        <li><a href=""><i class="fa fa-newspaper-o" aria-hidden="true"></i> Лента</a></li>
+        <li><a href=""><i class="fa fa-users" aria-hidden="true"></i> Подписки</a></li>
+        <br>
+        <li><a href=""><i class="fa fa-cog" aria-hidden="true"></i> Настройки</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="modal fade" tabindex="-1" id="myModal" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Привет, {{ request.user.username }}! Расскажи немного о себе</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" method="post" action='{% url 'user-about' username=request.user.username %}' data-toggle="validator">
+                    {% csrf_token %}
+                        <div class="form-group">
+                             <input id="first_name" name="first_name" type="text" placeholder="Имя" maxlength="50" class="form-control input-md" required>
+                        </div>
+                        <div class="form-group">
+                             <input id="last_name" name="last_name" type="text" placeholder="Фамилия" maxlength="50" class="form-control input-md" required>
+                        </div>
+                        <div class="form-group">
+                             <input id="email" name="email" type="email" placeholder="E-mail" class="form-control input-md" data-error="Проверьте правильность ввода email адреса" required>
+                             <div class="email-taken"></div>
+                             <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="form-group">
+                             <input id="birth_year" name="birth_year" type="number" min="1900" placeholder="Год рождения" class="form-control input-md" required>
+                             <div class="help-block with-errors"></div>
+                        </div>
+
+                        <div class="clearfix">
+                            <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+                            <div class="col-lg-12 center">
+                                <a class="help-block" href="/">Вернуться на главную страницу</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/validator.min.js' %}"></script>
+<script>
+    $(window).load(function(){
+        $('#myModal').modal('show');
+    });
+
+        $('#email').on('change',function() {
+            var email =  $("#email").val();
+            var email_taken = $(".email-taken");
+            $.ajax({
+                    type: "POST",
+                    url: "{% url 'email_taken' %}",
+                    data: {'email': email, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: "html",
+                    success: function (resp) {
+                        if (resp !== 'ok') {
+                            $(email_taken).empty();
+                            $(email_taken).append('<span>Email занят</span>').css("color","#a94442");
+                        } else {
+                            $(email_taken).empty();
+                        }
+                    }
+            });
+        });
+
+</script>
+{% endblock %}

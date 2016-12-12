@@ -1,0 +1,105 @@
+{% extends 'profile/../profile_base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Поставить цель
+{% endblock %}
+
+{% block sidebar %}
+    <div class="profile">
+        <h3 class="caps header">{{ request.user.username }}</h3>
+    </div>
+    <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="{% url 'new-goal' username=request.user.username  %}"><i class="fa fa-flag" aria-hidden="true"></i> Поставить цель</a></li>
+        <li><a href="{% url 'goals' username=request.user.username filter='all' %}"><i class="fa fa-bullseye" aria-hidden="true"></i> Мои цели</a></li>
+        <br>
+        <li><a href="{% url 'feed' username=request.user.username %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Лента</a></li>
+        <li><a href="{% url 'subscription' username=request.user.username %}"><i class="fa fa-users" aria-hidden="true"></i> Подписки</a></li>
+        <br>
+        <li><a href="{% url 'settings' username=request.user.username %}"><i class="fa fa-cog" aria-hidden="true"></i> Настройки</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="block">
+        <form action="{% url 'new-goal' username=user.username %}" id="newGoal" method="post" >
+        {% csrf_token %}
+            <div class="row">
+                <h3 class="header">Коротко о твоей цели</h3>
+                <hr>
+                <input id="textinput" name="title" maxlength="75" type="text" placeholder="Например: Начать заниматься спортом 3 раза в неделю" class="form-control input-md new-goal" autocomplete="off" required>
+            </div>
+            <div class="row">
+                <h3 class="header">Опиши цель подробнее</h3>
+                <hr>
+                <textarea class="form-control new-goal" id="description" maxlength="300"  name="description" placeholder="Например: Сегодня покупаю абонемент в спорт зал, буду заниматься там 3 дня в неделю. В доказательство каждая тренировка будет сопровождаться фотографией" required></textarea>
+            </div>
+            <div class="row">
+                <div class="col-md-5 nopadding">
+                    <h3 class="header">Укажи срок на выполнение</h3>
+                    <span class="info">(в днях)</span>
+                    <hr>
+                    <input id="days" name="days" type="number" placeholder="Например: 356" class="form-control input-md new-goal" autocomplete="off" min="3" max="3650" required>
+                </div>
+                <div class="col-md-offset-1 col-md-6 nopadding">
+                    <h3 class="header">Выбери дни недели для отчета</h3>
+                    <span class="info">(минимум 1 день)</span>
+                    <hr>
+                    <div class="btn-group new-goal" data-toggle="buttons" >
+                        <label class="btn btn-primary">
+                            <input id="day" type="checkbox" name="mon" value="1">Пн
+                        </label>
+                        <label class="btn btn-primary">
+                            <input id="day" type="checkbox" name="tue" value="2">Вт
+                        </label>
+                        <label class="btn btn-primary">
+                            <input id="day" type="checkbox" name="wed" value="3">Ср
+                        </label>
+                        <label class="btn btn-primary">
+                            <input id="day" type="checkbox" name="thu" value="4">Чт
+                        </label>
+                        <label class="btn btn-primary">
+                            <input id="day" type="checkbox" name="fri" value="5">Пт
+                        </label>
+                        <label class="btn btn-primary">
+                            <input id="day" type="checkbox" name="sat" value="6">Сб
+                        </label>
+                        <label class="btn btn-primary">
+                            <input id="day" type="checkbox" name="sun" value="7">Вс
+                        </label>
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <h3 class="header">Поставь цену своему слову</h3>
+            <span class="info">(Что сделаешь в случае невыполнения)</span>
+            <hr>
+            <input id="textinput" name="price_words" maxlength="100" type="text" placeholder="Отдаю 50 000 рублей бездомному" class="form-control input-md" autocomplete="off" required>
+
+            <br>
+            <button class="btn btn-primary" id="submit" data-loading-text="loading" type="submit">Поставить цель</button>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/jqBootstrapValidation.js' %}"></script>
+    <script>
+        $('#newGoal').submit(function(){
+            var error = $('.help-block');
+            $(error).empty();
+            var flag = 0;
+            $('form input:checkbox').each(function() {
+                if ($(this).is(':checked')) {
+                    flag = 1;
+                }
+            });
+
+            if (flag === 0) {
+                $(error).append('<p>Необходимо выбрать минимум 1 день недели</p>').css("color","#a94442");
+                return false;
+            }
+        });
+    </script>
+{% endblock %}

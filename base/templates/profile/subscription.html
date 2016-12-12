@@ -1,0 +1,225 @@
+{% extends 'profile/../profile_base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Подписки
+{% endblock %}
+
+{% block sidebar %}
+    <div class="profile">
+        <h3 class="caps header">{{ request.user.username }}</h3>
+    </div>
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="{% url 'new-goal' username=request.user.username  %}"><i class="fa fa-flag" aria-hidden="true"></i> Поставить цель</a></li>
+        <li><a href="{% url 'goals' username=request.user.username filter='all' %}"><i class="fa fa-bullseye" aria-hidden="true"></i> Мои цели</a></li>
+        <br>
+        <li><a href="{% url 'feed' username=request.user.username %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Лента</a></li>
+        <li class="active"><a href="{% url 'subscription' username=request.user.username %}"><i class="fa fa-users" aria-hidden="true"></i> Подписки</a></li>
+        <br>
+        <li><a href="{% url 'settings' username=request.user.username %}"><i class="fa fa-cog" aria-hidden="true"></i> Настройки</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="user-profile clearfix block">
+        <div class="row nomargin">
+            <div class="col-xs-3 col-md-2 avatar nopadding">
+                {% if owner.avatar == 'none' %}
+                    <img src="{% static 'images/profile_img.jpg' %}" class="img-responsive"{% if not guest %} data-toggle="modal" data-target="#avatar-modal" {% endif %}>
+                {% else %}
+                    <img src="{{ owner.avatar.url }}" class="img-responsive"{% if not guest %} data-toggle="modal" data-target="#avatar-modal" {% endif %}>
+                {% endif %}
+            </div>
+            <div class="col-xs-9 col-md-5">
+                <ul class="nopadding nomargin">
+                    <li>
+                        <h1 class="profile-username caps">{{ owner.user.username }}</h1>
+                        {% if not guest %}
+                            <a href="{% url 'settings' username=request.user.username %}" class="btn grey-button-xs btn-edit">Редактировать</a>
+                        {% else %}
+                            {% if subscriber %}
+                                <button name="{{ user.username }}" id="follow" class="btn grey-button-xs-reverse btn-edit">Отписаться</button>
+                            {% else %}
+                                <button name="{{ user.username }}" id="follow" class="btn grey-button-xs btn-edit">Подписаться</button>
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                    <li>
+                        <h2 class="header">{{ user.get_full_name }}</h2>
+                    </li>
+                    <li>
+                        <a href="{{ owner.web_site }}" class="info" target="_blank">{{ owner.web_site }}</a>
+                    </li>
+                    <li>
+                        <span class="user-about">{{ owner.more_info }}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="hidden-xs hidden-sm col-md-5 stat">
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.0 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполняется</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.1 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполнено</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.2 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Невыполнено</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row visible-xs visible-sm nomargin">
+            <div class="stat">
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.0 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполняется</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.1 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполнено</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.2 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Невыполнено</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9 main-col">
+        <div class="block">
+            <h3 class="header">Подписки</h3>
+            <hr>
+            {% if following %}
+                {% for userprofile in following %}
+                    <div class="follow clearfix">
+
+                        <div class="col-xs-3 col-md-1">
+                            {% if userprofile.avatar == 'none' %}
+                                <img src="{% static 'images/profile_img.jpg' %}" width="45" class="img-circle">
+                            {% else %}
+                                <img src="{{ userprofile.avatar.url }}" width="45" class="img-circle">
+                            {% endif %}
+                        </div>
+
+                        <div class="col-xs-5 col-md-5 follow-info">
+                            <a href="{% url 'goals' username=userprofile.user.username filter='all' %}">@{{ userprofile.user.username }}</a>
+                            <span>{{ userprofile.user.get_full_name }}</span>
+                        </div>
+                        <div class="col-xs-4 col-md-offset-4 col-md-2 follow-button">
+                            <button name="{{ userprofile.user.username }}" id="follow" class="btn btn-primary">Отписаться</button>
+                        </div>
+                    </div>
+                    <hr>
+                {% endfor %}
+            {% else %}
+                <span class="info">Подписок нет</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-3 right-col">
+        <div class="block">
+            <h3 class="header">Закладки</h3>
+            <hr>
+            {% if bookmarks %}
+                {% for goal in bookmarks %}
+                    <div class="bookmarks center">
+                        <div class="first-row">
+                            {% if goal.status == 'in-process' %}
+                                <span class="label label-warning">Выполняется</span>
+                            {% elif goal.status == 'success' %}
+                                <span class="label label-success">Выполнено</span>
+                            {% else %}
+                                <span class="label label-danger">Невыполнено</span>
+                            {% endif %}
+                            <a href="{% url 'goals' username=goal.user.user.username filter='all' %}" class="info">@{{ goal.user.user.username }}</a>
+                        </div>
+                        <div class="second-row">
+                            <a href="{% url 'goal-about' username=goal.user.user.username goal_id=goal.id %}">{{ goal.title }}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <span class="info">Закладок нет</span>
+            {% endif %}
+        </div>
+    </div>
+    <div id="avatar-modal" class="modal fade bs-modal-sm" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <ul class="avatar-edit">
+              <li>
+                  <a href="{% url 'avatar_delete' username=user.username %}" class="btn btn-block btn-default btn-block">Удалить фото</a>
+              </li>
+              <li>
+                  <form action="{% url 'avatar_edit' username=user.username %}" id="avatar" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                     <div class="file-upload">
+                         <label>
+                              <input type="file" name="avatar" accept="image/x-png, image/gif, image/jpeg" onchange="document.getElementById('avatar').submit()">
+                              <span>Изменить фото</span>
+                         </label>
+                    </div>
+                  </form>
+              </li>
+              <li>
+                  <div class="btn btn-default btn-block" data-dismiss="modal">Отмена</div>
+              </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script>
+$('#follow').click(function(){
+      $.ajax({
+            type: "POST",
+            url: "{% url 'follow' %}",
+            data: {'username': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: "json"
+          });
+    });
+$(document).ajaxStop(function(){
+    window.location.reload();
+});
+</script>
+{% endblock %}

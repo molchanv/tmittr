@@ -1,0 +1,782 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700&subset=latin,cyrillic);
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    font-family: 'Roboto',sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    margin-bottom: 160px;
+    background-color: #e7e7e7;
+}
+
+.clearfix:after {
+     content: " ";
+     display: block;
+     height: 0;
+     clear: both;
+     visibility: hidden;
+     font-size: 0;
+}
+
+.container{
+    max-width: 1170px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+h1,h2,h3 {
+    margin: 0;
+}
+
+h4{
+    font-size: 16px;
+    margin: 0 0 10px 0;
+}
+
+hr{
+    margin: 5px 0;
+    border-color: #e2e2e2;
+}
+
+.nopadding {
+    padding: 0 !important;
+}
+
+.nomargin{
+    margin: 0 !important;
+}
+
+ul > li *{
+    display: inline-block;
+}
+
+.dropdown-menu li{
+    display: block;
+}
+
+li {
+    list-style: none;
+}
+
+.caps {
+    text-transform: uppercase;
+}
+
+a {
+    color: #333;
+}
+
+a:hover{
+    color: #3eb495;
+}
+
+nav a {
+    color: #f6f6f6;
+}
+
+.navbar-nav > li > a:hover{
+    background: 0;
+    text-decoration: underline;
+}
+
+.navbar-nav>li>a:focus{
+    background: 0 0;
+    color: #fff;
+}
+
+.center{
+    text-align: center;
+}
+
+.avatar-edit {
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+}
+
+/*
+CUSTOM FILE UPLOAD
+*/
+
+.file-upload {
+     position: relative;
+     overflow: hidden;
+     height: 34px;
+     margin: 5px 0;
+     border: 1px solid #bbb;
+     border-radius: 3px;
+     color: #333;
+     text-align: center;
+}
+.file-upload:hover {
+     background-color: #e7e7e7;
+}
+.file-upload input[type="file"]{
+     display: none;
+}
+.file-upload label {
+     display: block;
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     cursor: pointer;
+     font-weight: 400;
+}
+.file-upload span {
+     line-height: 36px;
+}
+
+.avatar-edit>li *{
+    display: block;
+}
+
+/*
+GREY BUTTON
+*/
+
+.grey-button-xs{
+    padding: 2px 5px;
+    color: #888;
+    background: 0;
+    border: 1px solid #bbb;
+    border-radius: 2px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.grey-button-xs:hover{
+    border: 1px solid #3eb495;
+    color: #fff;
+    background-color: #3eb495;
+}
+
+.grey-button-xs-reverse{
+    padding: 2px 5px;
+    border-radius: 2px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid #3eb495;
+    color: #fff;
+    background-color: #3eb495;
+}
+
+.grey-button-xs-reverse:hover {
+    color: #fff;
+}
+
+.grey-button{
+    padding: 8px 20px;
+    color: #888;
+    border: 1px solid #e2e2e2;
+    border-radius: 2px;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 5px 0;
+}
+
+.grey-button:hover{
+    border: 1px solid #3eb495;
+    color: #fff;
+    background-color: #3eb495;
+}
+
+/*
+GREY BUTTON END
+*/
+
+.profile {
+    margin-top: 50px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+/*
+CUSTOMISE BOOTSTRAP STYLE
+*/
+
+.nav-pills > li > a:hover{
+    background:0 0;
+}
+
+.navbar-custom {
+    background-color: #333;
+}
+.navbar-custom .navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+.navbar-toggle .icon-bar+.icon-bar {
+    margin-top: 4px;
+}
+.navbar-toggle .icon-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+}
+.search-form {
+    background: 0 0;
+    border: 1px solid #f6f6f6;
+    border-radius: 3px;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 10px;
+    color: #f6f6f6;
+}
+
+.search-button {
+    background: 0 0;
+    border: 0;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 10px;
+    color: #f6f6f6;
+}
+
+.long-search-form > input {
+    width: 90%;
+}
+.long-search-form > * {
+    display: inline-block;
+}
+
+.breadcrumb {
+    background:0 0;
+    margin: 0 0 10px 0;
+    padding: 10px 0;
+}
+
+.breadcrumb a {
+    color: #848484;
+    text-decoration: none;
+}
+
+.breadcrumb > .active {
+    color: #3eb495;
+}
+
+.bs-callout{
+    border-left: 2px solid #3eb495;
+    background-color: #e7e7e7;
+    border-radius: 2px;
+}
+
+/*
+END CUSTOM BOOTSTRAP STYLE
+*/
+
+.sidebar {
+    margin-top: 70px;
+    position: fixed;
+    max-width: 230px;
+    padding-right: 20px;
+}
+
+.navbar-brand,.navbar-brand:hover {
+    color: #3eb495;
+    margin-left: 10px;
+}
+
+.greetings {
+    margin-left: 10px;
+}
+
+.block {
+    padding: 15px;
+    margin: 5px 0;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+
+.horizontal-block {
+    padding: 5px;
+    margin: 5px 0;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+
+.content {
+    margin-top: 70px;
+    padding: 0 15px 15px 30px;
+}
+
+/*
+USER-PROFILE BLOCK
+*/
+
+.modal-content{
+    padding: 0 15px;
+}
+
+.user-profile {
+    min-height: 166px;
+}
+
+.avatar,.avatar > img{
+    padding: 0;
+    cursor: pointer;
+}
+
+.user-about {
+    color: #767676;
+    font-size: 12px;
+}
+
+.btn-follow,.btn-edit {
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
+
+.profile-username {
+    color: #333;
+    font-size: 25px;
+    font-weight: 400;
+}
+
+.stat-num{
+    color: #3eb495;
+    font-weight: 700;
+    font-size: 25px;
+}
+
+.stat {
+    margin-top: 35px;
+    border-left: 1px solid #e2e2e2;
+}
+
+.stat *{
+    text-align: center;
+    padding: 0;
+}
+
+/*
+USER-PROFILE BLOCK END
+*/
+
+.username>h1 {
+    font-size: 29px;
+    margin-bottom: 10px;
+}
+.user-about>h2 {
+    font-size: 19px;
+    margin-bottom: 5px;
+    color: #6f6f6f;
+    font-weight: 500;
+}
+.user-about>span{
+    color: #6f6f6f;
+    width: 100%;
+}
+
+.btn-profile {
+    padding: 15px;
+    border: 1px solid #e7e7e7;
+    background-color: #f8f8f8;
+    border-radius: 0;
+    font-size: 17px;
+}
+
+.current {
+    border-bottom: 4px solid #3eb495;
+}
+
+.current>span{
+    color: #1890e7;
+}
+
+.right-panel {
+    margin-top: 70px;
+    border: 1px solid black;
+    height: 500px;
+}
+
+.header {
+    margin: 0;
+    font-size: 15px;
+    color: #333;
+}
+
+.main-col {
+    padding: 0 10px 0 0;
+}
+
+.header-green{
+    margin: 0;
+    font-size: 17px;
+    color: #3eb495;
+}
+
+.block > .header{
+    display: inline-block;
+}
+
+.goal {
+    min-height: 70px;
+    cursor: pointer;
+}
+
+.bookmarks{
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.goal-status {
+    text-align: center;
+    padding: 0 5px;
+    border-right: 1px solid #e7e7e7;
+}
+
+.info {
+    font-size: 11px;
+    color: #767676;
+}
+
+.help-block{
+    margin: 0;
+}
+
+.info-green {
+    color: #3eb495;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.progress {
+    height: 10px;
+    background-color: #e7e7e7;
+    max-width: 300px;
+    margin: 0;
+}
+
+.progress > .progress-bar{
+    border-radius: 30px;
+    height: 10px;
+}
+
+.right-col {
+    padding: 0;
+}
+
+.function-buttons > a+a{
+    margin-bottom: 10px;
+}
+.function-buttons > p+p{
+    margin: 0;
+}
+/*
+FOLLOW
+*/
+
+.follow>.col-md-1{
+    margin: 5px 0;
+}
+
+.follow-info {
+    margin: 17px 0;
+}
+
+.follow > .col-md-5 > a,span {
+    display: inline-block;
+}
+
+.follow-button > .btn {
+    float: right;
+    margin: 10px 0;
+}
+
+.goal-title {
+    margin-top: 5px;
+}
+
+.right-col > .block > .goal {
+    padding: 10px 0;
+}
+
+/*
+SETTINGS
+*/
+
+.form-settings {
+    margin-top: 30px;
+}
+
+.username-settings {
+    margin-top: 15px;
+}
+
+/*
+NEW-GOAL
+*/
+
+.new-goal {
+    margin-top: 10px;
+}
+
+.row {
+    margin: 20px 0;
+    padding: 0;
+}
+
+/*
+GOAL-ABOUT
+*/
+
+.goal-info {
+    padding: 0 30px;
+}
+.goal-info *{
+    display: block;
+}
+
+.goal-about {
+    background-color: #4bc1a2;
+    color: #fff;
+    padding: 15px 10px 6px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin: 5px 0;
+}
+.green-background{
+    background-color: #fff;
+    border: 1px solid #3eb495;
+    color: #3eb495;
+    padding: 10px;
+    border-radius: 2px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.green-background > a{
+    color: #3eb495;
+}
+
+.error{
+    background-color: #fff;
+    border: 1px solid #c7254e;
+    color: #c7254e;
+    padding: 10px;
+    border-radius: 2px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.goal-more-about{
+    border-radius: 4px;
+    padding-left: 10px;
+    margin: 5px 0;
+}
+
+.goal-more-about p {
+    font-size: 13px;
+    margin: 2px 0;
+}
+
+.goal-description{
+    margin-top: 5px;
+}
+
+.goal-header {
+    margin: 0 0 5px 0;
+    font-size: 20px;
+}
+
+.goal-header-s {
+    margin: 0 0 4px 0;
+    font-size: 15px;
+    color: #3eb495;
+}
+
+.weekday {
+    padding: 0 1px;
+    color: #888;
+    border: 1px solid #bbb;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.goal-stat {
+    padding: 0 0 8px 0;
+    border-radius: 4px;
+}
+
+.goal-stat > span {
+    display: inline-block;
+}
+
+.goal-stat > span > a{
+    color: #fff;
+}
+
+.goal-stat > span > i{
+    color: #fff;
+    margin-left: 10px;
+}
+
+.tab-pane{
+    margin-top: 15px;
+}
+
+/*
+FOOTER
+*/
+
+.footer {
+    background-color: #333;
+    padding: 20px 0 5px 0;
+    color: #9d9d9d;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    font-size: 12px;
+}
+.footer a{
+    color: #9d9d9d;
+}
+.footer a:hover{
+    color: #c4c4c4;
+}
+.links li, .contacts li{
+    display: inline-block;
+}
+.links li+li, .contacts li+li{
+    margin-left: 20px;
+}
+.contacts i{
+    font-size: 17px;
+}
+
+/*
+FEED
+*/
+
+.caption {
+    display: block;
+}
+
+.profile-link{
+    color: #919191;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.likes-bookmarks i+i{
+    padding-left: 10px;
+}
+
+.new-post{
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.user-info {
+    margin-bottom: 10px;
+}
+
+.feed-avatar > img{
+    max-width: 45px;
+}
+
+/*
+GOAL-ABOUT
+*/
+
+.imgs *{
+    display: inline-block;
+    cursor: pointer;
+}
+
+.imgs > img+img{
+    margin-left: 10px;
+}
+
+.bv-form .help-block {
+    margin-bottom: 0;
+}
+.bv-form .tooltip-inner {
+    text-align: left;
+}
+.nav-tabs li.bv-tab-success > a {
+    color: #3c763d;
+}
+.nav-tabs li.bv-tab-error > a {
+    color: #a94442;
+}
+
+.bv-form .bv-icon-no-label {
+	top: 0;
+}
+
+.bv-form .bv-icon-input-group {
+	top: 0;
+	z-index: 100;
+}
+
+/*
+MEDIA
+*/
+
+@media (max-width: 768px){
+    .navbar-collapse>.nav>li{
+        padding-left: 20px;
+    }
+    .navbar-collapse .open{
+        background-color:rgba(0,0,0,.3);
+    }
+    .nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+        color: #3eb495;
+        background: 0;
+    }
+    .well{
+        padding: 0;
+        margin: 0;
+    }
+    .dropdown-menu>li>a{
+        color: #f6f6f6;
+        background: 0;
+    }
+    .content {
+        padding: 10px;
+        margin-top: 45px;
+    }
+}
+@media (max-width: 992px) {
+    .stat{
+        margin-top: 5px;
+    }
+    .stat-num{
+        font-size: 20px;
+    }
+    .goal-status{
+        border-right: 0;
+    }
+    .block{
+        padding: 5px;
+    }
+    .main-col{
+        padding: 0;
+    }
+    .profile-username{
+        font-size: 20px;
+    }
+    .header {
+        font-size: 13px;
+    }
+    .bs-callout{
+        border-left: 0;
+        background-color: #e7e7e7;
+        border-radius: 2px;
+    }
+}
+@media (max-width: 1200px) {
+    .block{
+        padding: 10px;
+    }
+}

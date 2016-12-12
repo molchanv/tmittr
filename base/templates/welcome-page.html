@@ -1,0 +1,260 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+
+    <meta name="description" content="Сервис для достижения целей. Поставьте себе цель и публично отчитывайтесь о е">
+    <meta name="keywords" content="достижение цели, достижение целей, постановка целей, личные цели, цель">
+    <meta name="author" content="Ilya Molchanov">
+
+    <title>Достижение целей - Tmittr</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.fullPage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .welcome{background: url("{% static 'images/hero-bg.jpg' %}");}
+        .about{background: url("{% static 'images/background.jpg' %}");}
+    </style>
+  </head>
+
+  <body>
+    <div id="fullpage">
+
+        <div class="section">
+            <div class="welcome">
+            <div class="container">
+                <div class="nav navbar">
+                    <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#responsive-menu" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/"><h1 class="weight500">TMITTR</h1></a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="responsive-menu">
+                        {% if user %}
+                            <ul class="nav navbar-nav navbar-right center">
+                                <li><a href="{% url 'first-time' username=user.username %}">Личный кабинет</a></li>
+                                <li><a href="{% url 'logout' %}">Выйти({{ user.username }})</a></li>
+                            </ul>
+                        {% else %}
+                        <ul class="nav navbar-nav navbar-right center">
+                            <li class="visible-xs">
+                                <a href="{% url 'login' %}">Войти</a>
+                            </li>
+                            <li class="login hidden-xs">
+                                <button type="button" class="dropdown-toggle btn btn-primary login-btn" data-toggle="dropdown">Войти</button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form action="{% url 'login' %}" method="post">
+                                                    {% csrf_token %}
+                                                    <div class="form-group">
+                                                        <label class="sr-only" for="InputLogin">Логин</label>
+                                                        <input type="text" class="form-control" id="InputLogin" placeholder="Логин" name="username" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="sr-only" for="InputPassword">Пароль</label>
+                                                        <input type="password" class="form-control" id="InputPassword" placeholder="Пароль" name="password" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="submit" class="btn btn-primary btn-block">Вход</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="bottom text-center">
+                                            Впервые? <a href="{% url 'register' %}"><b>Присоединиться</b></a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <span>или</span>
+                            </li>
+                            <li><a href="{% url 'register' %}" class="weight500">Зарегистрироваться</a></li>
+                        </ul>
+                        {% endif %}
+                    </div><!-- /.navbar-header -->
+                </div><!-- /.nav navbar -->
+
+                <div class="title center">
+                    <h2 class="animated fadeInDown">Сервис для достижения целей</h2>
+                    <p class="animated fadeInUp delay-05s">Поставь цель и публично отчитывайся о её выполнении</p>
+                    <div class='icon-scroll'></div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="section">
+            <div class="step1">
+                <div class="container">
+                    <div class="row center">
+                        <i class="fa fa-flag-o visible-xs" aria-hidden="true"></i>
+                        <h3>Поставь себе цель</h3>
+                        <img src="{% static 'images/new-goal.png' %}" class="hidden-xs new-goal img-responsive">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="step2">
+                <div class="container">
+                    <div class="row center">
+                        <i class="fa fa-pencil-square-o visible-xs" aria-hidden="true"></i>
+                        <h3>Делай отчеты по поставленной цели</h3>
+                        <img src="{% static 'images/post.png' %}" class="hidden-xs new-goal img-responsive">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="step3">
+                <div class="container">
+                    <div class="row center">
+                        <i class="fa fa-users visible-xs" aria-hidden="true"></i>
+                        <h3>Следи за тем, как достигают своих целей другие</h3>
+                        <img src="{% static 'images/watch.png' %}" class="hidden-xs new-goal img-responsive">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="about">
+                <div class="row center">
+                    <h3>Начните достигать целей сейчас</h3>
+                </div>
+                <div class="row container">
+                        <div class="login-reg center">
+                            <form class="form-horizontal" method="post" action="{% url 'register' %}" data-toggle="validator">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input id="username" name="username" maxlength="50" minlength="3" pattern="^[_A-z0-9]{1,}$" data-pattern-error="Буквы латинского алфавита, цифры и нижнее подчеркивание" type="text" placeholder="Логин" class="form-control input-md" required>
+                                    <div class="username-taken"></div>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input id="password1" name="password1" type="password" placeholder="Пароль" class="form-control input-md" required>
+                                </div>
+                                <div class="form-group">
+                                    <input id="password2" name="password2" data-match="#password1" data-match-error="Пароли не совпадают" type="password" placeholder="Повторите пароль" data-validation-match-match="password1"  class="form-control input-md" required>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block btn-login">Зарегистрироваться</button>
+                            </form>
+                            <span class="first-time">Есть аккаунт? <a href="{% url 'login' %}"><b> Войти</b></a></span>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="contacts">
+                <div class="container">
+                    <div class="row center">
+                        <h3>Контакты</h3>
+                    </div>
+                    <div class="row center">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="block">
+                                <i class="fa fa-instagram" aria-hidden="true"></i>
+                                <h5>Instagram</h5>
+                                <span>tmittr</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="block">
+                                <i class="fa fa-vk" aria-hidden="true"></i>
+                                <h5>Вконтакте</h5>
+                                <span>vk.com/tmittr</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="block">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                                <h5>E-mail</h5>
+                                <span>info@tmittr.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="container">
+                    <div class="row nomargin">
+                        <div class="links col-sm-9">
+                            <ul class="nopadding">
+                                <li><a href="/">На главную</a></li>
+                                <li><a href="/#contacts/">Контакты</a></li>
+                                <li><a href="">Помощь</a></li>
+                            </ul>
+                            <ul class="nopadding">
+                                <li style="color: #c4c4c4;">Copyright © 2016 tmittr - сервис для достижения целей</li>
+                            </ul>
+                        </div>
+                        <div class="contacts col-sm-3">
+                            <ul class="nopadding">
+                                <li><a href="https://www.instagram.com/tmittr/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                <li><a href="https://vk.com/tmittr" target="_blank"><i class="fa fa-vk" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.fullPage.min.js' %}"></script>
+    <script type="text/javascript">
+		$(document).ready(function() {
+			$('#fullpage').fullpage({
+				sectionsColor: ['#333', '#fff', '#fff', '#fff', '#333','#e7e7e7'],
+				anchors: ['welcome', 'step1', 'step2', 'step3', 'about', 'contacts'],
+				scrollingSpeed: 300,
+                navigation: true
+			});
+
+            $('#username').change(function() {
+                var username =  $("#username").val();
+                var expUsername = /^[a-zA-Z0-9_]+$/g;
+                var resUsername =  username.search(expUsername);
+                var username_taken = $('.username-taken');
+                if(resUsername !==  -1){
+                    $.ajax({
+                            type: "POST",
+                            url: "{% url 'username_taken' %}",
+                            data: {'username': username, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                            dataType: "html",
+                            success: function (responce) {
+                                if (responce !== 'ok') {
+                                    $(username_taken).empty();
+                                    $(username_taken).append('<span>Логин занят</span>').css("color","#a94442");
+                                } else {
+                                    $(username_taken).empty();
+                                }
+                            }
+                    });
+                }
+            });
+        });
+	</script>
+	<!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter41083544 = new Ya.Metrika({ id:41083544, clickmap:true, trackLinks:true, accurateTrackBounce:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/41083544" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
+  </body>
+</html>

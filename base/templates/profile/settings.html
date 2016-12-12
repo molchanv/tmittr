@@ -1,0 +1,114 @@
+{% extends 'profile/../profile_base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Настройки
+{% endblock %}
+
+{% block sidebar %}
+    <div class="profile">
+        <h3 class="caps header">{{ request.user.username }}</h3>
+    </div>
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="{% url 'new-goal' username=request.user.username  %}"><i class="fa fa-flag" aria-hidden="true"></i> Поставить цель</a></li>
+        <li><a href="{% url 'goals' username=request.user.username filter='all' %}"><i class="fa fa-bullseye" aria-hidden="true"></i> Мои цели</a></li>
+        <br>
+        <li><a href="{% url 'feed' username=request.user.username %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Лента</a></li>
+        <li><a href="{% url 'subscription' username=request.user.username %}"><i class="fa fa-users" aria-hidden="true"></i> Подписки</a></li>
+        <br>
+        <li class="active"><a href="{% url 'settings' username=request.user.username %}"><i class="fa fa-cog" aria-hidden="true"></i> Настройки</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="settings">
+        <ul class="nav nav-pills horizontal-block">
+            <li role="presentation" class="active"><a href="{% url 'settings' username=user.username %}">Основные</a></li>
+            <li role="presentation"><a href="{% url 'change-password' username=userprofile.user.username %}">Сменить пароль</a></li>
+        </ul>
+        <div class="block">
+            {% if success %}
+                <span class="green-background"><i class="fa fa-exclamation-circle"></i> {{ success }}</span>
+            {% endif %}
+            <form class="form-horizontal form-settings" method="post" action='{% url 'settings' username=userprofile.user.username %}'>
+              {% csrf_token %}
+               <div class="form-group">
+                  <label class="col-md-2 control-label" for="name">Имя</label>
+                  <div class="col-md-4">
+                  <input id="name" name="first_name" maxlength="50" type="text" value="{{ userprofile.user.first_name }}" class="form-control input-md" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="last_name">Фамилия</label>
+                  <div class="col-md-4">
+                  <input id="last_name" name="last_name" maxlength="50" type="text" value="{{ userprofile.user.last_name }}" class="form-control input-md" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="web_site">Веб-сайт</label>
+                  <div class="col-md-4">
+                    <input id="web_site" name="web_site" maxlength="70" type="url" value="{{ userprofile.web_site }}" placeholder="http://..." class="form-control input-md">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="more_info">О себе</label>
+                  <div class="col-md-4">
+                    <textarea name="more_info" id="more_info" maxlength="140" class="form-control" rows="2" maxlength="140">{{ userprofile.more_info }}</textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="email">Электронная почта</label>
+                  <div class="col-md-4">
+                  <input id="email" name="email" type="email" maxlength="70" value="{{ userprofile.user.email }}" class="form-control input-md" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="username">Логин</label>
+                  <div class="col-md-4">
+                  <input id="username" name="username" type="text" maxlength="30" value="{{ userprofile.user.username }}" class="form-control input-md" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="birth_year">Год рождения</label>
+                  <div class="col-md-4">
+                  <input id="birth_year" name="birth_year" min="1900" max="2016" type="number" value="{{ userprofile.birth_year }}" class="form-control input-md" required>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary col-md-offset-2">Сохранить</button>
+
+            </form>
+        </div>
+    </div>
+    <div id="avatar-modal" class="modal fade bs-modal-sm" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <ul class="avatar-edit">
+              <li>
+                  <a href="{% url 'avatar_delete' username=user.username %}" class="btn btn-block btn-default btn-block">Удалить фото</a>
+              </li>
+              <li>
+                  <form action="{% url 'avatar_edit' username=user.username %}" id="avatar" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                     <div class="file-upload">
+                         <label>
+                              <input type="file" name="avatar" accept="image/x-png, image/gif, image/jpeg" onchange="document.getElementById('avatar').submit()">
+                              <span>Изменить фото</span>
+                         </label>
+                    </div>
+                  </form>
+              </li>
+              <li>
+                  <div class="btn btn-default btn-block" data-dismiss="modal">Отмена</div>
+              </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+{% endblock %}

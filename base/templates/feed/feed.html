@@ -1,0 +1,126 @@
+{% extends 'profile/../profile_base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Новости
+{% endblock %}
+
+{% block sidebar %}
+    <div class="profile">
+        <h3 class="caps header">{{ request.user.username }}</h3>
+    </div>
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="{% url 'new-goal' username=request.user.username  %}"><i class="fa fa-flag" aria-hidden="true"></i> Поставить цель</a></li>
+        <li><a href="{% url 'goals' username=request.user.username filter='all' %}"><i class="fa fa-bullseye" aria-hidden="true"></i> Мои цели</a></li>
+        <br>
+        <li class="active"><a href="{% url 'feed' username=request.user.username %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Лента</a></li>
+        <li><a href="{% url 'subscription' username=request.user.username %}"><i class="fa fa-users" aria-hidden="true"></i> Подписки</a></li>
+        <br>
+        <li><a href="{% url 'settings' username=request.user.username %}"><i class="fa fa-cog" aria-hidden="true"></i> Настройки</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="col-xs-12 col-lg-9 main-col">
+    <div class="block">
+        <h3 class="header">Новости</h3>
+    </div>
+    {% if all_posts %}
+        {% for post in all_posts %}
+            <div class="block post">
+                <div class="user-info clearfix nopadding">
+                    <div class="col-xs-1 feed-avatar nopadding">
+                        {% if post.goal.user.avatar == 'none' %}
+                            <img src="{% static 'images/profile_img.jpg' %}" class="img-responsive img-circle">
+                        {% else %}
+                            <img src="{{ post.goal.user.avatar.url }}" class="img-responsive img-circle">
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-10 col-xs-offset-1 col-sm-offset-0">
+                        <div class="first-row">
+                            <span class="header">{{ post.goal.user.user.get_full_name }}</span>
+                        </div>
+                        <div class="second-row">
+                            <a href="{% url 'goals' username=post.goal.user.user.username filter='all' %}" class="info">@{{ post.goal.user.user.username }}</a>
+                            <span class="info">{{ post.created }}</span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="caption">
+                    <a href="{% url 'goal-about' goal_id=post.goal.id username=post.goal.user.user.username %}" class="new-post">{{ post.goal.title }}</a>
+                    <p>{{ post.text }}</p>
+                </div>
+                <div class="imgs">
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" class="img" height="130" data-toggle="modal" data-target="#img-modal">
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="block">
+            <span class="green-background"><i class="fa fa-exclamation-circle"></i> Никто из тех, на кого вы подписаны не сделал отчет</span>
+        </div>
+    {% endif %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if all_posts.has_previous %}
+                <a href="?page={{ all_posts.previous_page_number }}">назад</a>
+            {% endif %}
+            <span class="current">
+                Страница {{ all_posts.number }} из {{ all_posts.paginator.num_pages }}
+            </span>
+            {% if all_posts.has_next %}
+                <a href="?page={{ all_posts.next_page_number }}">вперед</a>
+            {% endif %}
+        </span>
+    </div>
+
+    </div>
+    <div class="visible-lg col-lg-3 right-col">
+        <div class="block">
+            <h3 class="header">Популярное</h3>
+            <hr>
+            <div class="popular center">
+                {% for goal in popular %}
+                    <div class="first-row">
+                        <span class="info">{{ goal.user.user.get_full_name }}</span>
+                        <a href="{% url 'goals' username=goal.user.user.username filter='all' %}" class="info">@{{ goal.user.user.username }}</a>
+                    </div>
+                    <div class="second-row">
+                        <a href="{% url 'goal-about' goal_id=goal.id username=goal.user.user.username %}">{{ goal.title }}</a>
+                    </div>
+                    <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="img-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="center">
+                <img src="" id="img" class="" style="max-height: 500px;cursor: pointer;">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js"></script>
+<script>
+window.sr = ScrollReveal();
+sr.reveal('.post');
+
+
+$(document).ajaxStop(function(){
+    window.location.reload();
+});
+$('.img').click(function() {
+    var imageSrc = $(this).attr('src');
+    $('#img').attr('src', imageSrc);
+});
+$('#img').click(function() {
+    $('#img-modal').modal('hide')
+});
+</script>
+{% endblock %}

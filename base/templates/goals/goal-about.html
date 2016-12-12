@@ -1,0 +1,389 @@
+{% extends 'profile/../profile_base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ goal.title|truncatewords:2 }}
+{% endblock %}
+
+{% block sidebar %}
+    <div class="profile">
+        <h3 class="caps header">{{ request.user.username }}</h3>
+    </div>
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="{% url 'new-goal' username=request.user.username  %}"><i class="fa fa-flag" aria-hidden="true"></i> Поставить цель</a></li>
+        <li><a href="{% url 'goals' username=request.user.username filter='all' %}"><i class="fa fa-bullseye" aria-hidden="true"></i> Мои цели</a></li>
+        <br>
+        <li><a href="{% url 'feed' username=request.user.username %}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Лента</a></li>
+        <li><a href="{% url 'subscription' username=request.user.username %}"><i class="fa fa-users" aria-hidden="true"></i> Подписки</a></li>
+        <br>
+        <li><a href="{% url 'settings' username=request.user.username %}"><i class="fa fa-cog" aria-hidden="true"></i> Настройки</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="user-profile clearfix block">
+        <div class="row nomargin">
+            <div class="col-xs-3 col-md-2 avatar nopadding">
+                {% if owner.avatar == 'none' %}
+                    <img src="{% static 'images/profile_img.jpg' %}" class="img-responsive"{% if not guest %} data-toggle="modal" data-target="#avatar-modal" {% endif %}>
+                {% else %}
+                    <img src="{{ owner.avatar.url }}" class="img-responsive"{% if not guest %} data-toggle="modal" data-target="#avatar-modal" {% endif %}>
+                {% endif %}
+            </div>
+            <div class="col-xs-9 col-md-5">
+                <ul class="nopadding nomargin">
+                    <li>
+                        <h1 class="profile-username caps">{{ owner.user.username }}</h1>
+                        {% if not guest %}
+                            <a href="{% url 'settings' username=request.user.username %}" class="btn grey-button-xs btn-edit">Редактировать</a>
+                        {% else %}
+                            {% if subscriber %}
+                                <button name="{{ user.username }}" id="follow" class="btn grey-button-xs-reverse btn-edit">Отписаться</button>
+                            {% else %}
+                                <button name="{{ user.username }}" id="follow" class="btn grey-button-xs btn-edit">Подписаться</button>
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                    <li>
+                        <h2 class="header">{{ user.get_full_name }}</h2>
+                    </li>
+                    <li>
+                        <a href="{{ owner.web_site }}" class="info" target="_blank">{{ owner.web_site }}</a>
+                    </li>
+                    <li>
+                        <span class="user-about">{{ owner.more_info }}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="hidden-xs hidden-sm col-md-5 stat">
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.0 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполняется</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.1 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполнено</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.2 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Невыполнено</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row visible-xs visible-sm nomargin">
+            <div class="stat">
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.0 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполняется</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.1 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Выполнено</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-4">
+                    <ul class="nomargin">
+                        <li>
+                            <span class="stat-num">{{ statistics.2 }}</span>
+                        </li>
+                        <li>
+                            <span class="info">Невыполнено</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if confirm and not guest %}
+        <div class="block">
+            <div class="error"><i class="fa fa-exclamation-circle"></i> Время вышло. Подтвердите окончание цели</div>
+            <div class="btn btn-default" data-toggle="modal" data-target="#endGoal">Закончить цель</div>
+        </div>
+    {% endif %}
+
+    <div class="col-xs-12 col-md-9 main-col">
+        <div class="block">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'goals' username=owner.user.username filter='all' %}">{{ user.username }}</a></li>
+                <li class="active">{{ goal.title|truncatewords:3 }}</li>
+            </ol>
+            <hr>
+            <div class="clearfix">
+                <div class="col-md-6 goal-about">
+                    <h1 class="goal-header">{{ goal.title }}</h1>
+                    <p class="goal-description">{{ goal.description }}</p>
+                    <div class="goal-stat">
+                        <span><i class="fa fa-heart" aria-hidden="true"></i> <a href="">{{ goal.total_likes }}</a></span>
+                        <span><i class="fa fa-bookmark" aria-hidden="true"></i> <a href="">{{ goal.total_bookmarks }}</a></span>
+                    </div>
+                </div>
+                <div class="col-md-3 goal-more-about">
+                    <h2 class="goal-header-s">Цена слова</h2>
+                    <p class="info">{{ goal.price_words }}</p>
+                    <h2 class="goal-header-s">Срок</h2>
+                    <p class="info">{{ goal.days }} дней</p>
+                    {% if not goal.confirmation %}
+                        <h2 class="goal-header-s">Окончание</h2>
+                        <p class="info">{{ goal.end.date }}</p>
+                    {% endif %}
+                    <h2 class="goal-header-s">Отчеты по дням</h2>
+                    {% for day in weekdays %}
+                        <span class="weekday">{{ day }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% if not goal.confirmation %}
+            {% if not guest %}
+            <div class="block clearfix">
+                <form id="new-post" action="{% url 'new-post' username=request.user.username goal_id=goal.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="textarea">Сделать отчет</label>
+                    <textarea class="form-control" rows="2" maxlength="400" id="textarea" name="text"></textarea>
+                    <br>
+                    <div class="col-md-3">
+                        <input type="file" name="image" accept="image/x-png, image/gif, image/jpeg">
+                    </div>
+                    <div class="col-md-2 col-md-offset-7">
+                        <button type="submit" class="btn btn-primary">Отправить</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        {% endif %}
+        {% if posts %}
+            {% for post in posts %}
+                <div class="block post">
+                    <div class="post-header">
+                        <div class="post-info">
+                            {% if not guest %}
+                            <a class="close" href="{% url 'delete-post' username=request.user.username post_id=post.id goal_id=goal.id  %}"><span aria-hidden="true">&times;</span></a>
+                            {% endif %}
+                            <span class='info'>{{ post.created }}</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="post-content">
+                        <p>{{ post.text }}</p>
+                        {% if post.image %}
+                            <div class="imgs">
+                                <img src="{{ post.image.url }}" class="img" height="130" data-toggle="modal" data-target="#img-modal">
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if goals.has_previous %}
+                        <a href="?page={{ goals.previous_page_number }}">назад</a>
+                    {% endif %}
+                    <span class="current">
+                        Страница {{ goals.number }} из {{ goals.paginator.num_pages }}
+                    </span>
+                    {% if goals.has_next %}
+                        <a href="?page={{ goals.next_page_number }}">вперед</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% else %}
+            <div class="block">
+                <div class="green-background"><i class="fa fa-exclamation-circle"></i> У цели нет отчетов</div>
+            </div>
+        {% endif %}
+        {% if not guest %}
+            <div id="avatar-modal" class="modal fade bs-modal-sm" tabindex="-1" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <ul class="avatar-edit">
+                      <li>
+                          <a href="{% url 'avatar_delete' username=user.username %}" class="btn btn-block btn-default btn-block">Удалить фото</a>
+                      </li>
+                      <li>
+                          <form action="{% url 'avatar_edit' username=user.username %}" id="avatar" method="post" enctype="multipart/form-data">
+                              {% csrf_token %}
+                             <div class="file-upload">
+                                 <label>
+                                      <input type="file" name="avatar" accept="image/x-png, image/gif, image/jpeg" onchange="document.getElementById('avatar').submit()">
+                                      <span>Изменить фото</span>
+                                 </label>
+                            </div>
+                          </form>
+                      </li>
+                      <li>
+                          <div class="btn btn-default btn-block" data-dismiss="modal">Отмена</div>
+                      </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {% if goal.status == 'in-process' or confirm %}
+            <div class="modal fade" id="endGoal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Закончить цель</h4>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="nav nav-pills nav-justified" id="endGoaltabs">
+                                <li role="tab"><a href="#success">Цель выполнена</a></li>
+                                {% if confirm %}
+                                    <li role="tab"><a href="#endgoal">Цель не выполнена</a></li>
+                                {% else %}
+                                    <li role="tab"><a href="#endgoal">Отказаться от цели</a></li>
+                                {% endif %}
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade" id="success">
+                                    <form action="{% url 'success' username=request.user.username goal_id=goal.id %}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <label class="control-label" for="filebutton">Ссылки и комментарии к цели</label>
+                                        <textarea class="form-control" rows="5" maxlength="400" autocomplete="off" name="success_comment" placeholder="Ваши коментарии к выполненной цели. Ссылки на ресурсы с доказательством" required></textarea>
+                                        <label class="control-label" for="filebutton">Фото-доказательство <span class="info">(необязательно)</span></label>
+                                        <input id="filebutton" name="success_photo" accept="image/x-png, image/gif, image/jpeg" class="input-file" type="file">
+                                        <br>
+                                        <button type="submit" class="btn btn-primary">Закончить цель</button>
+                                    </form>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="endgoal">
+                                    <form action="{% url 'fail' username=request.user.username goal_id=goal.id %}" method="post" class="form-horizontal">
+                                        {% csrf_token %}
+                                        {% if confirm %}
+                                            <label class="control-label" for="fail_comment1">Комментарий</label>
+                                            <input id="fail_comment1" type="text" class="form-control" maxlength="200" placeholder="Ваш комментарий к невыполненной цели" name="fail_comment" autocomplete="off" required>
+                                        {% else %}
+                                            <label class="control-label" for="fail_comment2">Причина</label>
+                                            <input type="text" id="fail_comment2" class="form-control" maxlength="200" name="fail_comment" placeholder="Например: Сдаюсь" autocomplete="off" required>
+                                        {% endif %}
+                                        <br>
+                                        <button type="submit" class="btn btn-primary">Закончить цель</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="visible-md visible-lg col-md-3 right-col">
+        <div class="block clearfix">
+            <div class="function-buttons">
+                {% if guest %}
+                    <p>
+                    {% if bookmark %}
+                        <button id="bookmark" name="{{ goal.id }}" class="btn btn-primary btn-block">Удалить из закладок</button>
+                    {% else %}
+                        <button id="bookmark" name="{{ goal.id }}" class="btn btn-default btn-block">В закладки</button>
+                    {% endif %}
+                    </p>
+                    <p>
+                    {% if like %}
+                        <button id="like" name="{{ goal.id }}" class="btn btn-primary btn-block">Нравится</button>
+                    {% else %}
+                        <button id="like" name="{{ goal.id }}" class="btn btn-default btn-block">Нравится</button>
+                    {% endif %}
+                    </p>
+                {% else %}
+                    {% if goal.status == 'in-process' or confirm %}
+                        <div class="btn btn-default btn-block" data-toggle="modal" data-target="#endGoal">Закончить цель</div>
+                    {% else %}
+                        <div>Цель закончена</div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="img-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="center">
+                <img src="" id="img" style="max-height: 500px;cursor: pointer;">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js"></script>
+<script>
+window.sr = ScrollReveal();
+sr.reveal('.post');
+
+$('#follow').click(function(){
+      $.ajax({
+            type: "POST",
+            url: "{% url 'follow' %}",
+            data: {'username': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: "json"
+          });
+    });
+$('#bookmark').click(function(){
+      $.ajax({
+            type: "POST",
+            url: "{% url 'bookmark' %}",
+            data: {'goal_id': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: "json"
+          });
+    });
+
+$('#like').click(function(){
+      $.ajax({
+            type: "POST",
+            url: "{% url 'like' %}",
+            data: {'goal_id': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: "json"
+          });
+    });
+$('.img').click(function() {
+    var imageSrc = $(this).attr('src');
+    $('#img').attr('src', imageSrc);
+});
+$('#img').click(function() {
+    $('#img-modal').modal('hide')
+});
+$('#endGoaltabs a:first').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show')
+});
+$('#endGoaltabs a:last').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show')
+});
+$(document).ajaxStop(function(){
+    window.location.reload();
+});
+</script>
+{% endblock %}
