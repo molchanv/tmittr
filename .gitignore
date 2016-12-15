@@ -2,3 +2,4 @@
 db.sqlite3
 tmittr/settings.py
 __pycache__
+telegram_bot/token.py

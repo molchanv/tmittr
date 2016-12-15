@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.http import HttpResponse
-from django.core.mail import EmailMessage
+
 try:
     from django.utils import simplejson as json
 except ImportError:
@@ -122,7 +122,6 @@ def goal_about(request, username=None, goal_id=None):
         'statistics': statistics,
     }
 
-    #
     if not goal.confirmation and now > goal.end:
         confirm = True
         context['confirm'] = confirm
