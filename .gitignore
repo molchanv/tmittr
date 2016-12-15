@@ -1,3 +1,4 @@
 .idea/
 db.sqlite3
 tmittr/settings.py
+__pycache__
